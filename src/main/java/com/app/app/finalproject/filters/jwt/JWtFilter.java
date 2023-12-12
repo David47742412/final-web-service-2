@@ -14,34 +14,41 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 @Component
 public class JWtFilter extends OncePerRequestFilter {
 
+    private static final Set<String> UNPROTECTED_URLS = Set.of("/jwt/generate");
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
-            var token = request.getHeader("Authorization").replace("Bearer ", "");
-            var algorithm = Algorithm.HMAC256(Environment.JWT_SECRET);
-            var verifier = JWT.require(algorithm).build();
-            verifier.verify(token);
-
-        } catch (Exception ex) {
-            if (!request.getRequestURI().contains("/jwt")) {
-                System.out.println("Unauthorized");
-                response.setStatus(401);
-                var body = new HashMap<String, Object>();
-                body.put("message", "Unauthorized");
-                body.put("statusCode", 401);
-                body.put("body", new ArrayList<>());
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
-                var writer = response.getWriter();
-                writer.print(new Gson().toJson(body));
-                writer.flush();
-                return;
+            if (!isNotProtectedUrl(request)) {
+                var token = request.getHeader("Authorization").replace("Bearer ", "");
+                var algorithm = Algorithm.HMAC256(Environment.JWT_SECRET);
+                var verifier = JWT.require(algorithm).build();
+                verifier.verify(token);
             }
+        } catch (Exception ex) {
+            response.setStatus(401);
+            var body = new HashMap<String, Object>();
+            body.put("message", "Unauthorized");
+            body.put("statusCode", 401);
+            body.put("body", new ArrayList<>());
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            var writer = response.getWriter();
+            writer.print(new Gson().toJson(body));
+            writer.flush();
+            return;
         }
         filterChain.doFilter(request, response);
     }
+
+    private boolean isNotProtectedUrl(HttpServletRequest request) {
+        String requestUrl = request.getRequestURI();
+        return UNPROTECTED_URLS.stream().anyMatch(requestUrl::matches);
+    }
+
 }
