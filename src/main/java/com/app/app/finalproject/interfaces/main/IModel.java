@@ -1,15 +1,16 @@
 package com.app.app.finalproject.interfaces.main;
 
+import com.app.app.finalproject.dto.ResponseDto;
 import org.springframework.http.ResponseEntity;
 
 public interface IModel<T> {
     boolean exists(String id);
 
-    ResponseEntity<Iterable<T>> find();
+    ResponseEntity<ResponseDto<T>> find();
 
-    ResponseEntity<Iterable<T>> insert(T entity);
+    ResponseEntity<ResponseDto<T>> insert(T entity);
 
-    ResponseEntity<Iterable<T>> update(String id, T entity);
+    ResponseEntity<ResponseDto<T>> update(String id, T entity);
 
-    ResponseEntity<Iterable<T>> delete(String id);
+    ResponseEntity<ResponseDto<T>> delete(String id);
 }

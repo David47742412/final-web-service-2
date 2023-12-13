@@ -10,7 +10,7 @@ public class AuthorEntity {
     public String authorId;
 
     @Column(name = "name", length = 100, nullable = false, columnDefinition = "VARCHAR(100)")
-    public String name;
+        public String name;
 
     @Column(name = "last_name", length = 100, nullable = false, columnDefinition = "VARCHAR(100)")
     public String lastName;
