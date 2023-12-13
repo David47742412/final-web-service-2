@@ -26,7 +26,7 @@ public class BookController {
         return this._service.insert(entity);
     }
 
-    @PostMapping("{id}")
+    @PutMapping("{id}")
     public ResponseEntity<ResponseDto<BookEntity>> update(@PathVariable("id") String id, @RequestBody() BookEntity entity) {
         return this._service.update(id, entity);
     }
