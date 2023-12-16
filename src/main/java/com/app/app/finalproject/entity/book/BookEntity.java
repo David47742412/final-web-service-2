@@ -4,6 +4,8 @@ import com.app.app.finalproject.entity.author.AuthorEntity;
 import com.app.app.finalproject.entity.category.CategoryEntity;
 import com.app.app.finalproject.entity.color.ColorEntity;
 import com.app.app.finalproject.entity.publisher.PublisherEntity;
+import com.app.app.finalproject.entity.rating.RatingEntity;
+import com.app.app.finalproject.entity.review.ReviewEntity;
 import jakarta.persistence.*;
 
 @Entity(name = "book")
@@ -40,5 +42,13 @@ public class BookEntity {
     @ManyToOne(targetEntity = PublisherEntity.class)
     @JoinColumn(name = "publisher_id", referencedColumnName = "publisher_id")
     public PublisherEntity publisher;
+
+    @ManyToOne(targetEntity = RatingEntity.class)
+    @JoinColumn(name = "rating_id", referencedColumnName = "rating_id")
+    public RatingEntity rating;
+
+    @ManyToOne(targetEntity = ReviewEntity.class)
+    @JoinColumn(name = "review_id", referencedColumnName = "review_id")
+    public ReviewEntity review;
 
 }
